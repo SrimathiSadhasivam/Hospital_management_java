@@ -1,0 +1,571 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+
+public class HospitalManagementSystem extends Frame implements ActionListener {
+   
+    Button btnPatients, btnDoctors, btnAppointments, btnBilling;
+    Label heading;
+    static ArrayList<String> patientList = new ArrayList<>();  // List to store patient information
+    static ArrayList<String> doctorList = new ArrayList<>();    // List to store doctor information
+    static ArrayList<String> appointmentList = new ArrayList<>();  // List to store appointment information
+    public HospitalManagementSystem() {
+     setLayout(new BorderLayout(10, 10));
+        setBackground(new Color(240, 248, 255));
+
+        // Heading
+        heading = new Label("Hospital Management System", Label.CENTER);
+        heading.setFont(new Font("SansSerif", Font.BOLD, 24));
+        heading.setForeground(new Color(70, 130, 180));
+        add(heading, BorderLayout.NORTH); // Add heading to the top
+
+        // Button panel for horizontal alignment of buttons
+        Panel buttonPanel = new Panel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10)); // Horizontal FlowLayout with gaps
+
+        // Create and add buttons
+        btnPatients = createStyledButton("Manage Patients", 200, 30);
+        btnDoctors = createStyledButton("Manage Doctors", 130, 30);
+        btnAppointments = createStyledButton("Appointments", 130, 30);
+        btnBilling = createStyledButton("Manage Billing", 130, 30);
+
+        buttonPanel.add(btnPatients);
+        buttonPanel.add(btnDoctors);
+        buttonPanel.add(btnAppointments);
+        buttonPanel.add(btnBilling);
+
+        // Add action listeners for button functionality
+        btnPatients.addActionListener(this);
+        btnDoctors.addActionListener(this);
+        btnAppointments.addActionListener(this);
+        btnBilling.addActionListener(this);
+
+        // Add button panel to the center of the frame
+        add(buttonPanel, BorderLayout.CENTER);
+
+        // Window settings
+        setTitle("Hospital Management System");
+        setSize(600, 300);  // Adjusted window size for horizontal layout
+        setVisible(true);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                System.exit(0);
+            }
+        });
+    }
+
+    private Button createStyledButton(String text, int width, int height) {
+        Button button = new Button(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 14));
+        button.setBackground(new Color(100, 149, 237));  // Cornflower blue background
+        button.setForeground(Color.WHITE);  // White text color
+       button.setPreferredSize(new Dimension(100, 30));  // Smaller button size
+
+        return button;
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == btnPatients) {
+            new ManagePatientsWindow();  // Opens the Manage Patients window
+        } else if (ae.getSource() == btnDoctors) {
+            new ManageDoctorsWindow();  // Opens the Manage Doctors window
+        } else if (ae.getSource() == btnAppointments) {
+            new ManageAppointmentsWindow();  // Opens the Manage Appointments window
+        }
+        else if (ae.getSource() == btnBilling) {
+        new ManageBillingWindow();  // Opens the Manage Billing window
+    }
+
+    }
+    class ManageBillingWindow extends Frame implements ActionListener {
+    Button btnAddBilling, btnViewBilling;
+    Label heading, billingInfoLabel;
+    TextArea billingInfoArea;
+    static ArrayList<String> billingList = new ArrayList<>(); // List to store billing information
+
+    public ManageBillingWindow() {
+        setLayout(new BorderLayout(20, 20));
+        setBackground(new Color(224, 255, 255));
+        Panel buttonPanel = new Panel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        heading = new Label("Manage Billing", Label.CENTER);
+        heading.setFont(new Font("Serif", Font.BOLD, 28));
+        heading.setForeground(new Color(70, 130, 180));
+        btnAddBilling = createStyledButton("Add Billing", 150, 40);
+        btnViewBilling = createStyledButton("View Billing", 150, 40);
+        buttonPanel.add(btnAddBilling);
+        buttonPanel.add(btnViewBilling);
+        btnAddBilling.addActionListener(this);
+        btnViewBilling.addActionListener(this);
+        billingInfoLabel = new Label("Billing Information:", Label.CENTER);
+        billingInfoLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+        billingInfoLabel.setForeground(new Color(0, 100, 0));
+        billingInfoArea = new TextArea("No billing data available", 5, 40, TextArea.SCROLLBARS_VERTICAL_ONLY);
+        billingInfoArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        billingInfoArea.setBackground(new Color(255, 255, 240));
+        add(heading, BorderLayout.NORTH);
+        add(buttonPanel, BorderLayout.CENTER);
+        add(billingInfoLabel, BorderLayout.SOUTH);
+        add(billingInfoArea, BorderLayout.EAST);
+        setTitle("Manage Billing");
+        setSize(600, 400);
+        setVisible(true);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                dispose();
+            }
+        });
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == btnAddBilling) {
+            new AddBillingWindow();
+        } else if (ae.getSource() == btnViewBilling) {
+            if (billingList.isEmpty()) {
+                billingInfoArea.setText("No billing data available");
+            } else {
+                StringBuilder billingData = new StringBuilder();
+                for (String bill : billingList) {
+                    billingData.append(bill).append("\n");
+                }
+                billingInfoArea.setText(billingData.toString());
+            }
+        }
+    }
+}
+class ManageSupportWindow extends Frame implements ActionListener {
+    Button btnAddInquiry, btnViewInquiries;
+    Label heading, inquiryInfoLabel;
+    TextArea inquiryInfoArea;
+    static ArrayList<String> supportInquiries = new ArrayList<>();  // List to store support inquiries
+
+    public ManageSupportWindow() {
+        setLayout(new BorderLayout(20, 20));
+        setBackground(new Color(240, 230, 140));
+        Panel buttonPanel = new Panel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        heading = new Label("Manage Support", Label.CENTER);
+        heading.setFont(new Font("Serif", Font.BOLD, 28));
+        heading.setForeground(new Color(70, 130, 180));
+        btnAddInquiry = createStyledButton("Add Inquiry", 150, 40);
+        btnViewInquiries = createStyledButton("View Inquiries", 150, 40);
+        buttonPanel.add(btnAddInquiry);
+        buttonPanel.add(btnViewInquiries);
+        btnAddInquiry.addActionListener(this);
+        btnViewInquiries.addActionListener(this);
+        inquiryInfoLabel = new Label("Support Inquiries:", Label.CENTER);
+        inquiryInfoLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+        inquiryInfoLabel.setForeground(new Color(0, 100, 0));
+        inquiryInfoArea = new TextArea("No support inquiries available", 5, 40, TextArea.SCROLLBARS_VERTICAL_ONLY);
+        inquiryInfoArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        inquiryInfoArea.setBackground(new Color(255, 255, 240));
+        add(heading, BorderLayout.NORTH);
+        add(buttonPanel, BorderLayout.CENTER);
+        add(inquiryInfoLabel, BorderLayout.SOUTH);
+        add(inquiryInfoArea, BorderLayout.EAST);
+        setTitle("Manage Support");
+        setSize(600, 400);
+        setVisible(true);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                dispose();
+            }
+        });
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == btnAddInquiry) {
+            new AddSupportInquiryWindow();  // Opens the Add Inquiry window
+        } else if (ae.getSource() == btnViewInquiries) {
+            if (supportInquiries.isEmpty()) {
+                inquiryInfoArea.setText("No support inquiries available");
+            } else {
+                StringBuilder inquiryData = new StringBuilder();
+                for (String inquiry : supportInquiries) {
+                    inquiryData.append(inquiry).append("\n");
+                }
+                inquiryInfoArea.setText(inquiryData.toString());
+            }
+        }
+    }
+}
+class AddSupportInquiryWindow extends Frame implements ActionListener {
+    Label lblInquiry;
+    TextArea txtInquiry;
+    Button btnSubmit;
+
+    public AddSupportInquiryWindow() {
+        setLayout(new BorderLayout(10, 10));
+        lblInquiry = new Label("Support Inquiry:");
+        txtInquiry = new TextArea(5, 40);
+        btnSubmit = new Button("Submit");
+        btnSubmit.addActionListener(this);
+        add(lblInquiry, BorderLayout.NORTH);
+        add(txtInquiry, BorderLayout.CENTER);
+        add(btnSubmit, BorderLayout.SOUTH);
+        setTitle("Add Support Inquiry");
+        setSize(400, 200);
+        setVisible(true);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                dispose();
+            }
+        });
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == btnSubmit) {
+            String inquiryData = txtInquiry.getText();
+            ManageSupportWindow.supportInquiries.add(inquiryData);
+            System.out.println("Support Inquiry Submitted: " + inquiryData);
+            dispose();
+        }
+    }
+}
+
+class AddBillingWindow extends Frame implements ActionListener {
+    Label lblPatient, lblAmount, lblDate;
+    TextField txtPatient, txtAmount, txtDate;
+    Button btnSubmit;
+
+    public AddBillingWindow() {
+        setLayout(new GridLayout(4, 2, 10, 10));
+        lblPatient = new Label("Patient Name:");
+        txtPatient = new TextField(20);
+        lblAmount = new Label("Billing Amount:");
+        txtAmount = new TextField(20);
+        lblDate = new Label("Billing Date:");
+        txtDate = new TextField(20);
+        btnSubmit = new Button("Submit");
+        btnSubmit.addActionListener(this);
+        add(lblPatient);
+        add(txtPatient);
+        add(lblAmount);
+        add(txtAmount);
+        add(lblDate);
+        add(txtDate);
+        add(new Label());
+        add(btnSubmit);
+        setTitle("Add Billing");
+        setSize(400, 200);
+        setVisible(true);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                dispose();
+            }
+        });
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == btnSubmit) {
+            String billingData = "Patient: " + txtPatient.getText() + ", Amount: " + txtAmount.getText() + ", Date: " + txtDate.getText();
+            ManageBillingWindow.billingList.add(billingData); // Add billing data to the billing list
+            System.out.println("Billing Added: " + billingData);
+            dispose();
+        }
+    }
+}
+
+
+    class ManagePatientsWindow extends Frame implements ActionListener {
+        Button btnAddPatient, btnViewPatient;
+        Label heading, patientInfoLabel;
+        TextArea patientInfoArea;
+
+        public ManagePatientsWindow() {
+            setLayout(new BorderLayout(20, 20));
+            setBackground(new Color(255, 248, 220));
+            Panel buttonPanel = new Panel();
+            buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
+            heading = new Label("Manage Patients", Label.CENTER);
+            heading.setFont(new Font("Serif", Font.BOLD, 28));
+            heading.setForeground(new Color(70, 130, 180));
+            btnAddPatient = createStyledButton("Add Patient", 150, 40);
+            btnViewPatient = createStyledButton("View Patients", 150, 40);
+            buttonPanel.add(btnAddPatient);
+            buttonPanel.add(btnViewPatient);
+            btnAddPatient.addActionListener(this);
+            btnViewPatient.addActionListener(this);
+            patientInfoLabel = new Label("Patient Information:", Label.CENTER);
+            patientInfoLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+            patientInfoLabel.setForeground(new Color(0, 100, 0));
+            patientInfoArea = new TextArea("No patient data available", 5, 40, TextArea.SCROLLBARS_VERTICAL_ONLY);
+            patientInfoArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+            patientInfoArea.setBackground(new Color(255, 255, 240));
+            add(heading, BorderLayout.NORTH);
+            add(buttonPanel, BorderLayout.CENTER);
+            add(patientInfoLabel, BorderLayout.SOUTH);
+            add(patientInfoArea, BorderLayout.EAST);
+            setTitle("Manage Patients");
+            setSize(600, 400);
+            setVisible(true);
+            addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent we) {
+                    dispose();
+                }
+            });
+        }
+
+        public void actionPerformed(ActionEvent ae) {
+            if (ae.getSource() == btnAddPatient) {
+                new AddPatientWindow();
+            } else if (ae.getSource() == btnViewPatient) {
+                if (patientList.isEmpty()) {
+                    patientInfoArea.setText("No patient data available");
+                } else {
+                    StringBuilder patientData = new StringBuilder();
+                    for (String patient : patientList) {
+                        patientData.append(patient).append("\n");
+                    }
+                    patientInfoArea.setText(patientData.toString());
+                }
+            }
+        }
+    }
+
+    class AddPatientWindow extends Frame implements ActionListener {
+        Label lblName, lblAge, lblGender;
+        TextField txtName, txtAge;
+        Choice genderChoice;
+        Button btnSubmit;
+
+        public AddPatientWindow() {
+            setLayout(new GridLayout(4, 2, 10, 10));
+            lblName = new Label("Patient Name:");
+            txtName = new TextField(20);
+            lblAge = new Label("Patient Age:");
+            txtAge = new TextField(5);
+            lblGender = new Label("Gender:");
+            genderChoice = new Choice();
+            genderChoice.add("Male");
+            genderChoice.add("Female");
+            genderChoice.add("Other");
+            btnSubmit = new Button("Submit");
+            btnSubmit.addActionListener(this);
+            add(lblName);
+            add(txtName);
+            add(lblAge);
+            add(txtAge);
+            add(lblGender);
+            add(genderChoice);
+            add(new Label());
+            add(btnSubmit);
+            setTitle("Add New Patient");
+            setSize(400, 200);
+            setVisible(true);
+            addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent we) {
+                    dispose();
+                }
+            });
+        }
+
+        public void actionPerformed(ActionEvent ae) {
+            if (ae.getSource() == btnSubmit) {
+                String patientData = "Name: " + txtName.getText() + ", Age: " + txtAge.getText() + ", Gender: " + genderChoice.getSelectedItem();
+                patientList.add(patientData);
+                System.out.println("Patient Added: " + patientData);
+                dispose();
+            }
+        }
+    }
+
+    class ManageDoctorsWindow extends Frame implements ActionListener {
+        Button btnAddDoctor, btnViewDoctor;
+        Label heading, doctorInfoLabel;
+        TextArea doctorInfoArea;
+
+        public ManageDoctorsWindow() {
+            setLayout(new BorderLayout(20, 20));
+            setBackground(new Color(240, 255, 240));
+            Panel buttonPanel = new Panel();
+            buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
+            heading = new Label("Manage Doctors", Label.CENTER);
+            heading.setFont(new Font("Serif", Font.BOLD, 28));
+            heading.setForeground(new Color(70, 130, 180));
+            btnAddDoctor = createStyledButton("Add Doctor", 150, 40);
+            btnViewDoctor = createStyledButton("View Doctors", 150, 40);
+            buttonPanel.add(btnAddDoctor);
+            buttonPanel.add(btnViewDoctor);
+            btnAddDoctor.addActionListener(this);
+            btnViewDoctor.addActionListener(this);
+            doctorInfoLabel = new Label("Doctor Information:", Label.CENTER);
+            doctorInfoLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+            doctorInfoLabel.setForeground(new Color(0, 100, 0));
+            doctorInfoArea = new TextArea("No doctor data available", 5, 40, TextArea.SCROLLBARS_VERTICAL_ONLY);
+            doctorInfoArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+            doctorInfoArea.setBackground(new Color(255, 255, 240));
+            add(heading, BorderLayout.NORTH);
+            add(buttonPanel, BorderLayout.CENTER);
+            add(doctorInfoLabel, BorderLayout.SOUTH);
+            add(doctorInfoArea, BorderLayout.EAST);
+            setTitle("Manage Doctors");
+            setSize(600, 400);
+            setVisible(true);
+            addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent we) {
+                    dispose();
+                }
+            });
+        }
+
+        public void actionPerformed(ActionEvent ae) {
+            if (ae.getSource() == btnAddDoctor) {
+                new AddDoctorWindow();
+            } else if (ae.getSource() == btnViewDoctor) {
+                if (doctorList.isEmpty()) {
+                    doctorInfoArea.setText("No doctor data available");
+                } else {
+                    StringBuilder doctorData = new StringBuilder();
+                    for (String doctor : doctorList) {
+                        doctorData.append(doctor).append("\n");
+                    }
+                    doctorInfoArea.setText(doctorData.toString());
+                }
+            }
+        }
+    }
+
+    class AddDoctorWindow extends Frame implements ActionListener {
+        Label lblName, lblSpecialization;
+        TextField txtName, txtSpecialization;
+        Button btnSubmit;
+
+        public AddDoctorWindow() {
+            setLayout(new GridLayout(3, 2, 10, 10));
+            lblName = new Label("Doctor Name:");
+            txtName = new TextField(20);
+            lblSpecialization = new Label("Specialization:");
+            txtSpecialization = new TextField(20);
+            btnSubmit = new Button("Submit");
+            btnSubmit.addActionListener(this);
+            add(lblName);
+            add(txtName);
+            add(lblSpecialization);
+            add(txtSpecialization);
+            add(new Label());
+            add(btnSubmit);
+            setTitle("Add New Doctor");
+            setSize(400, 200);
+            setVisible(true);
+            addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent we) {
+                    dispose();
+                }
+            });
+        }
+
+        public void actionPerformed(ActionEvent ae) {
+            if (ae.getSource() == btnSubmit) {
+                String doctorData = "Name: " + txtName.getText() + ", Specialization: " + txtSpecialization.getText();
+                doctorList.add(doctorData);
+                System.out.println("Doctor Added: " + doctorData);
+                dispose();
+            }
+        }
+    }
+
+    class ManageAppointmentsWindow extends Frame implements ActionListener {
+        Button btnAddAppointment, btnViewAppointment;
+        Label heading, appointmentInfoLabel;
+        TextArea appointmentInfoArea;
+
+        public ManageAppointmentsWindow() {
+            setLayout(new BorderLayout(20, 20));
+            setBackground(new Color(255, 255, 224));
+            Panel buttonPanel = new Panel();
+            buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
+            heading = new Label("Manage Appointments", Label.CENTER);
+            heading.setFont(new Font("Serif", Font.BOLD, 28));
+            heading.setForeground(new Color(70, 130, 180));
+            btnAddAppointment = createStyledButton("Add Appointment", 150, 40);
+            btnViewAppointment = createStyledButton("View Appointments", 150, 40);
+            buttonPanel.add(btnAddAppointment);
+            buttonPanel.add(btnViewAppointment);
+            btnAddAppointment.addActionListener(this);
+            btnViewAppointment.addActionListener(this);
+            appointmentInfoLabel = new Label("Appointment Information:", Label.CENTER);
+            appointmentInfoLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+            appointmentInfoLabel.setForeground(new Color(0, 100, 0));
+            appointmentInfoArea = new TextArea("No appointment data available", 5, 40, TextArea.SCROLLBARS_VERTICAL_ONLY);
+            appointmentInfoArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+            appointmentInfoArea.setBackground(new Color(255, 255, 240));
+            add(heading, BorderLayout.NORTH);
+            add(buttonPanel, BorderLayout.CENTER);
+            add(appointmentInfoLabel, BorderLayout.SOUTH);
+            add(appointmentInfoArea, BorderLayout.EAST);
+            setTitle("Manage Appointments");
+            setSize(600, 400);
+            setVisible(true);
+            addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent we) {
+                    dispose();
+                }
+            });
+        }
+
+        public void actionPerformed(ActionEvent ae) {
+            if (ae.getSource() == btnAddAppointment) {
+                new AddAppointmentWindow();
+            } else if (ae.getSource() == btnViewAppointment) {
+                if (appointmentList.isEmpty()) {
+                    appointmentInfoArea.setText("No appointment data available");
+                } else {
+                    StringBuilder appointmentData = new StringBuilder();
+                    for (String appointment : appointmentList) {
+                        appointmentData.append(appointment).append("\n");
+                    }
+                    appointmentInfoArea.setText(appointmentData.toString());
+                }
+            }
+        }
+    }
+
+    class AddAppointmentWindow extends Frame implements ActionListener {
+        Label lblPatient, lblDoctor, lblDate;
+        TextField txtPatient, txtDoctor, txtDate;
+        Button btnSubmit;
+
+        public AddAppointmentWindow() {
+            setLayout(new GridLayout(4, 2, 10, 10));
+            lblPatient = new Label("Patient Name:");
+            txtPatient = new TextField(20);
+            lblDoctor = new Label("Doctor Name:");
+            txtDoctor = new TextField(20);
+            lblDate = new Label("Appointment Date:");
+            txtDate = new TextField(20);
+            btnSubmit = new Button("Submit");
+            btnSubmit.addActionListener(this);
+            add(lblPatient);
+            add(txtPatient);
+            add(lblDoctor);
+            add(txtDoctor);
+            add(lblDate);
+            add(txtDate);
+            add(new Label());
+            add(btnSubmit);
+            setTitle("Add New Appointment");
+            setSize(400, 200);
+            setVisible(true);
+            addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent we) {
+                    dispose();
+                }
+            });
+        }
+
+        public void actionPerformed(ActionEvent ae) {
+            if (ae.getSource() == btnSubmit) {
+                String appointmentData = "Patient: " + txtPatient.getText() + ", Doctor: " + txtDoctor.getText() + ", Date: " + txtDate.getText();
+                appointmentList.add(appointmentData);
+                System.out.println("Appointment Added: " + appointmentData);
+                dispose();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new HospitalManagementSystem();
+    }
+}
